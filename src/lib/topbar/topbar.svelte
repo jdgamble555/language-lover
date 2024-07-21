@@ -5,7 +5,7 @@
 	import * as Sheet from '$lib/components/ui/sheet';
 	import Darkmode from './darkmode.svelte';
 	import Dropdown from './dropdown.svelte';
-	import Searchbar from './searchbar.svelte';
+	//import Searchbar from './searchbar.svelte';
 	import Heart from 'lucide-svelte/icons/heart';
 	import { page } from '$app/stores';
 </script>
