@@ -12,7 +12,14 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
-		"test:unit": "vitest"
+		"test:unit": "vitest",
+		"sb-types": "npx supabase gen types --lang=typescript --local > ./src/lib/database.types.ts",
+		"sb-stop": "npx supabase stop",
+		"sb-start": "npx supabase start & npm run sb-types",
+		"sb-reset": "npx supabase db reset & npm run sb-types",
+		"sb-link": "npx supabase link",
+		"sb-migration": "npx supabase migration new",
+		"sb-push": "npx supabase db push"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
@@ -37,10 +44,12 @@
 		"supabase": "^1.183.5",
 		"svelte": "^4.2.7",
 		"svelte-check": "^3.6.0",
+		"sveltekit-superforms": "^2.16.1",
 		"tailwindcss": "^3.4.4",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.0.0-alpha.20",
+		"valibot": "^0.36.0",
 		"vite": "^5.0.3",
 		"vitest": "^1.2.0"
 	},
@@ -48,9 +57,11 @@
 	"dependencies": {
 		"bits-ui": "^0.21.12",
 		"clsx": "^2.1.1",
+		"formsnap": "^1.0.1",
 		"svelte-radix": "^1.1.0",
 		"svelte-sonner": "^0.3.27",
 		"tailwind-merge": "^2.4.0",
-		"tailwind-variants": "^0.2.1"
+		"tailwind-variants": "^0.2.1",
+		"zod": "^3.23.8"
 	}
 }

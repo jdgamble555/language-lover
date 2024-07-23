@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { dev } from '$app/environment';
 	import * as Card from '$lib/components/ui/card';
 	import UserAuthForm from './user-auth-form.svelte';
 </script>
@@ -23,8 +24,13 @@
 		</p>
 	</Card.Content>
 </Card.Root>
+{#if dev}
+	<div class="mt-5 flex items-center justify-center underline hover:no-underline">
+		<a href="http://localhost:54324/monitor" target="_blank" rel="noopener noreferrer">Developer Login</a>
+	</div>
+{/if}
 <footer>
 	<section class="container py-14 text-center">
-		<h3>© 2024 Drill.to</h3>
+		<h3>© 2024 Language Lover</h3>
 	</section>
 </footer>
