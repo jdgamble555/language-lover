@@ -1,5 +1,18 @@
 import { fail, type Actions } from "@sveltejs/kit";
 import { randomID } from "$lib/image-utils";
+import { superValidate, withFiles } from "sveltekit-superforms";
+import { valibot } from "sveltekit-superforms/adapters";
+import type { PageServerLoad } from "./$types";
+import { photoSchema } from "./profile-schema";
+
+export const load = (async () => {
+
+    const photoForm = await superValidate(valibot(photoSchema));
+
+    return { photoForm };
+
+}) satisfies PageServerLoad;
+
 
 export const actions = {
 
@@ -85,9 +98,6 @@ export const actions = {
 
     photo: async ({ locals: { supabase, safeGetUser }, request }) => {
 
-        const { photo } = Object.fromEntries(
-            await request.formData()
-        );
 
         const { user } = await safeGetUser();
 
@@ -95,9 +105,13 @@ export const actions = {
             return fail(500, { emailMessage: 'User not logged in!' });
         }
 
-        if (!photo || typeof photo === 'string') {
-            return fail(500, { photo_invalid: true });
+        const form = await superValidate(request, valibot(photoSchema));
+
+        if (!form.valid) {
+            return fail(400, withFiles({ form }));
         }
+
+        const { photo } = form.data;
 
         // upload image
         const ext = photo.name.slice((photo.name.lastIndexOf(".") - 1 >>> 0) + 2);
@@ -127,9 +141,7 @@ export const actions = {
             });
         }
 
-        return {
-            success: true
-        };
+        return withFiles({ form });
     },
 
     username: async ({ locals: { supabase, safeGetUser }, request }) => {

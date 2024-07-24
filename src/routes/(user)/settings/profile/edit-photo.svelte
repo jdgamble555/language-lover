@@ -1,22 +1,32 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
-	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { getInitials } from '$lib/get-initials';
-	import { editProfile } from './edit-profile';
+	import { derived } from 'svelte/store';
+	import type { PageData } from '$types/routes/(user)/settings/profile/$types';
+	import { superForm } from 'sveltekit-superforms';
+	import { valibotClient } from 'sveltekit-superforms/adapters';
+	import { toast } from 'svelte-sonner';
+	import * as Form from '$lib/components/ui/form';
+	import { photoSchema } from './profile-schema';
+
+	const data = derived(page, ($page) => $page.data as PageData);
+
+	const form = superForm($data.photoForm, {
+		onUpdated({ form }) {
+			if (form.valid) {
+				toast.success('Photo Updated!');
+			}
+		}
+	});
+
+	const { form: formData, enhance, delayed } = form;
 </script>
 
 <Card.Root>
-	<form
-		method="POST"
-		enctype="multipart/form-data"
-		action="/settings/profile?/photo"
-		use:enhance={editProfile}
-	>
+	<form method="POST" enctype="multipart/form-data" action="/settings/profile?/photo" use:enhance>
 		<Card.Header>
 			<Card.Title>Profile Image</Card.Title>
 		</Card.Header>
@@ -34,19 +44,18 @@
 					</Avatar.Root>
 				{/if}
 				<div class="grid w-full max-w-sm items-center gap-1.5">
-					<Label for="username">Photo</Label>
-					<Input name="photo" type="file" required />
-					{#if $page.form?.username_invalid}
-						<p class="text-[0.8rem] font-medium text-destructive">Invalid Username</p>
-					{/if}
+					<Form.Field {form} name="photo">
+						<Form.Control let:attrs>
+							<Form.Label>Photo</Form.Label>
+							<Input type="file" {...attrs} bind:value={$formData.photo} />
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>					
 				</div>
-				{#if $page.form?.photoMessage}
-					<p class="text-[0.8rem] font-medium text-destructive">{$page.form.photoMessage}</p>
-				{/if}
 			</div>
 		</Card.Content>
 		<Card.Footer class="border-t px-6 py-4">
-			<Button type="submit">Save</Button>
+			<Form.Button>Save</Form.Button>
 		</Card.Footer>
 	</form>
 </Card.Root>
