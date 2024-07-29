@@ -1,30 +1,53 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
-	import { editProfile } from './edit-profile';
+	import * as Form from '$lib/components/ui/form';
+	import type { PageData } from '$types/routes/(user)/settings/profile/$types';
+	import { derived } from 'svelte/store';
+	import { superForm } from 'sveltekit-superforms';
+	import { toast } from 'svelte-sonner';
+	import { dev } from '$app/environment';
+
+	const data = derived(page, ($page) => $page.data as PageData);
+
+	const form = superForm($data.emailForm, {
+		onUpdated({ form }) {
+			if (form.valid) {
+				toast.success(form.message);
+				if (dev) {
+					console.log('http://localhost:54324/monitor');
+				}
+			}
+		},
+		onError({ result }) {
+			if (result.error) {
+				console.error(result.error);
+				toast.error('There was an error updating the database!');
+			}
+		}
+	});
+
+	const { form: formData, enhance, errors } = form;
 </script>
 
 <Card.Root>
-	<form method="POST" action="/settings/profile?/email" use:enhance={editProfile}>
+	<form method="POST" action="?/email" use:enhance>
 		<Card.Header>
 			<Card.Title>Email Address</Card.Title>
 		</Card.Header>
 		<Card.Content>
 			<div class="grid gap-6">
 				<div class="grid w-full max-w-sm items-center gap-1.5">
-					<Label for="email">Email</Label>
-					<Input name="email" type="email" placeholder="Email" value={$page.data.email} required />
-					{#if $page.form?.name_email}
-						<p class="text-[0.8rem] font-medium text-destructive">Invalid Email</p>
-					{/if}
+					<Form.Field {form} name="email">
+						<Form.Control let:attrs>
+							<Form.Label>Email</Form.Label>
+							<Input {...attrs} bind:value={$formData.email} />
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 				</div>
-				{#if $page.form?.emailMessage}
-					<p class="text-[0.8rem] font-medium text-destructive">{$page.form.emailMessage}</p>
-				{/if}
 			</div>
 		</Card.Content>
 		<Card.Footer class="border-t px-6 py-4">

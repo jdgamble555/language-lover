@@ -10,7 +10,10 @@ declare global {
 		interface PageData {
 			user?: User | null;
 		}
-		// interface Error {}
+		interface Error {
+			code?: string;
+			id?: string;
+		}
 		// interface Platform {}
 	}
 }

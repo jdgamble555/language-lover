@@ -123,7 +123,7 @@ RETURNS text
 LANGUAGE sql
 SECURITY DEFINER
 AS $$
-  SELECT split_part(name, '.', 2);
+  SELECT lower(split_part(name, '.', 2));
 $$;
 
 -- User can insert own profile photo 

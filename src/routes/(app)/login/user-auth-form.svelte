@@ -23,7 +23,7 @@
 			if (form.valid) {
 				toast.success('Email sent!');
 				if (dev) {
-					console.log('http://localhost:54324/');
+					console.log('http://localhost:54324/monitor');
 				}
 			}
 		}

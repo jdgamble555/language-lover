@@ -7,26 +7,30 @@
 	import { derived } from 'svelte/store';
 	import type { PageData } from '$types/routes/(user)/settings/profile/$types';
 	import { superForm } from 'sveltekit-superforms';
-	import { valibotClient } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
 	import * as Form from '$lib/components/ui/form';
-	import { photoSchema } from './profile-schema';
 
 	const data = derived(page, ($page) => $page.data as PageData);
 
 	const form = superForm($data.photoForm, {
 		onUpdated({ form }) {
 			if (form.valid) {
-				toast.success('Photo Updated!');
+				toast.success(form.message);
+			}
+		},
+		onError({ result }) {
+			if (result.error) {
+				console.error(result.error);
+				toast.error('There was an error updating the database!');
 			}
 		}
 	});
 
-	const { form: formData, enhance, delayed } = form;
+	const { form: formData, enhance } = form;
 </script>
 
 <Card.Root>
-	<form method="POST" enctype="multipart/form-data" action="/settings/profile?/photo" use:enhance>
+	<form method="POST" enctype="multipart/form-data" action="?/photo" use:enhance>
 		<Card.Header>
 			<Card.Title>Profile Image</Card.Title>
 		</Card.Header>
@@ -39,7 +43,7 @@
 							alt={$page.data.profile.display_name}
 						/>
 						<Avatar.Fallback>
-							{getInitials($page.data.profile.display_name || $page.data.email || 'DT')}
+							{getInitials($page.data.profile.display_name || $page.data.email || 'LL')}
 						</Avatar.Fallback>
 					</Avatar.Root>
 				{/if}
@@ -47,10 +51,15 @@
 					<Form.Field {form} name="photo">
 						<Form.Control let:attrs>
 							<Form.Label>Photo</Form.Label>
-							<Input type="file" {...attrs} bind:value={$formData.photo} />
+							<Input
+								type="file"
+								{...attrs}
+								bind:value={$formData.photo}
+								
+							/>
 						</Form.Control>
 						<Form.FieldErrors />
-					</Form.Field>					
+					</Form.Field>
 				</div>
 			</div>
 		</Card.Content>
