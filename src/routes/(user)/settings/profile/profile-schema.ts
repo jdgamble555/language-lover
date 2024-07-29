@@ -23,15 +23,15 @@ export const photoOptions = {
 	}
 };
 
-const _usernameSchema = v.pipe(
+const _usernameSchema = v.nullish(v.pipe(
 	v.string(),
 	v.minLength(2),
 	v.maxLength(14),
 	v.regex(/^[a-zA-Z0-9]+(?:[._][a-zA-Z0-9]+)*$/, "Username can only include alphanumeric characters or '.' in the middle.")
-);
+));
 
 export const profileSchema = v.object({
-	display_name: v.string(),
+	display_name: v.nullish(v.string()),
 	username: _usernameSchema
 });
 

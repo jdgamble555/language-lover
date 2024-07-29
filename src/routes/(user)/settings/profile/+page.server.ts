@@ -18,8 +18,8 @@ export const load = (async ({ parent }) => {
     const photoForm = await superValidate(valibot(photoSchema, photoOptions));
 
     const profileForm = await superValidate({
-        display_name: profile.display_name ?? '',
-        username: profile.username ?? ''
+        display_name: profile.display_name,
+        username: profile.username
     }, valibot(profileSchema));
 
     const emailForm = await superValidate({
