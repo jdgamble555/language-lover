@@ -23,7 +23,7 @@ export const photoOptions = {
 	}
 };
 
-const _usernameSchema = v.nullish(v.pipe(
+const _usernameSchema = v.nullable(v.pipe(
 	v.string(),
 	v.minLength(2),
 	v.maxLength(14),
@@ -31,7 +31,7 @@ const _usernameSchema = v.nullish(v.pipe(
 ));
 
 export const profileSchema = v.object({
-	display_name: v.nullish(v.string()),
+	display_name: v.nullable(v.string()),
 	username: _usernameSchema
 });
 
