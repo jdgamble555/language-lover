@@ -29,8 +29,4 @@
 		<a href="http://localhost:54324/monitor" target="_blank" rel="noopener noreferrer">Developer Login</a>
 	</div>
 {/if}
-<footer>
-	<section class="container py-14 text-center">
-		<h3>© 2024 Language Lover</h3>
-	</section>
-</footer>
+

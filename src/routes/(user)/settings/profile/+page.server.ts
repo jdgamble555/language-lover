@@ -165,7 +165,7 @@ export const actions = {
         const { photo } = form.data;
 
         // upload image
-        const ext = photo.name.slice((photo.name.lastIndexOf(".") - 1 >>> 0) + 2);
+        const ext = photo.name.slice((photo.name.lastIndexOf(".") - 1 >>> 0) + 2).toLowerCase();
 
         const { error: storageError, data: imageData } = await supabase
             .storage

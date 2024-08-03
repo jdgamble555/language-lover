@@ -3,6 +3,7 @@
 	import '../app.css';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import Topbar from '@/topbar/topbar.svelte';
+	import Footer from './footer.svelte';
 </script>
 
 <ModeWatcher />
@@ -10,3 +11,4 @@
 
 <Topbar />
 <slot />
+<Footer />
